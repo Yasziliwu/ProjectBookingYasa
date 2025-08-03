@@ -1,0 +1,26 @@
+﻿@page
+@model BookingClient.Pages.PijatModel
+@{
+}
+
+
+<h2 class="text-center mt-4">Pilih Layanan Pijat</h2>
+
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var layanan in Model.LayananList)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow">
+                    <img src="~/images/@(layanan.NamaLayanan.ToLower().Replace(" ", "_")).jpg" class="card-img-top" alt="Layanan Image" style="height: 200px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@layanan.NamaLayanan</h5>
+                        <p class="card-text">Durasi: @layanan.DurasiMenit menit</p>
+                        <p class="card-text text-success font-weight-bold">Rp @layanan.Harga.ToString("N0")</p>
+                        <a class="btn btn-primary" href="/BookingPijat?id=@layanan.Id&booking=Pijat">Lanjutkan Booking</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

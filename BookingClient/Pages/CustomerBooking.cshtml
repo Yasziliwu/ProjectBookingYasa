@@ -1,0 +1,130 @@
+﻿@page
+@model BookingClient.Pages.CustomerBookingModel
+@{
+    ViewData["Title"] = "Booking Karaoke";
+}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+<!-- SweetAlert2 CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<!-- SweetAlert2 JS -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Booking - <span class="text-primary">@Model.NamaRuangan</span> ROOM</h2>
+
+    <form method="post" class="bg-light p-4 border rounded shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="mb-3">
+            <label class="form-label">Nama</label>
+            <input type="text" class="form-control" value="@HttpContext.Session.GetString("nama")" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Tanggal</label>
+            <input id="tanggalPicker" asp-for="Booking.TanggalPemesanan" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Jam Mulai</label>
+            <input id="waktuMulai" asp-for="Booking.WaktuMulai" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Jam Selesai</label>
+            <input id="waktuSelesai" asp-for="Booking.WaktuSelesai" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Pemandu (LC)</label>
+            <div class="input-group">
+                <input type="text" id="selectedLC" class="form-control" placeholder="Pilih LC" readonly />
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#lcModal">
+                    Pilih
+                </button>
+            </div>
+            <input type="hidden" asp-for="Booking.PemanduId" id="Booking_PemanduId" />
+            <input type="hidden" name="id" value="@Model.Booking.RuanganId" />
+            <input type="hidden" asp-for="NamaRuangan" />
+        </div>
+
+        <button type="submit" class="btn btn-warning w-100 fw-bold">Booking Now</button>
+    </form>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="lcModal" tabindex="-1" aria-labelledby="lcModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="lcModalLabel">Pilih Pemandu (LC)</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                @foreach (var lc in Model.PemanduList)
+                {
+                    <div class="card mb-2 d-flex flex-row align-items-center p-2"
+                         onclick="selectLC(@lc.Id, '@lc.NamaPemandu')" style="cursor:pointer">
+                        <img src="@Url.Content("~/images/fotolc.jpg")"
+                             class="rounded-circle me-3" alt="LC Image" width="60" height="60" style="object-fit: cover;">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">@lc.NamaPemandu (@lc.JenisKelamin)</h6>
+                            <small class="text-muted">@lc.Deskripsi</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+
+    <script>
+        function selectLC(id, nama) {
+            document.getElementById("selectedLC").value = nama;
+            document.getElementById("Booking_PemanduId").value = id;
+            var modal = bootstrap.Modal.getInstance(document.getElementById('lcModal'));
+            modal.hide();
+        }
+    </script>
+
+    <script>
+        flatpickr("#tanggalPicker", {
+            dateFormat: "Y-m-d",
+            defaultDate: new Date()
+        });
+
+        flatpickr("#waktuMulai", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            defaultDate: new Date()
+        });
+
+        flatpickr("#waktuSelesai", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            defaultDate: new Date()
+        });
+
+
+
+    </script>
+
+
+    <script>
+        @if (ViewData["SwalError"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: '@ViewData["SwalError"]'
+                });
+            </text>
+        }
+    </script>
+}

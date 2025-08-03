@@ -1,0 +1,29 @@
+﻿@page
+@model KaraokeModel
+@{
+    ViewData["Title"] = "Pilih Ruangan Karaoke";
+    var cabang = Model.RuanganList.FirstOrDefault()?.NamaCabang ?? "Cabang Tidak Diketahui";
+}
+
+<h2 class="text-center mt-4">@cabang</h2>
+
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var room in Model.RuanganList)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow">
+                    <img src="~/images/@(room.NamaJenisRuangan.ToLower()).jpg" class="card-img-top" alt="Room Image" style="height: 200px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@room.NamaJenisRuangan ROOM</h5>
+                        <p class="card-text">Nomor: @room.NomorRuangan</p>
+                        <p class="card-text">Kapasitas: @room.KapasitasMaksimal orang</p>
+                        <p class="card-text text-success font-weight-bold">Rp @room.HargaPerJam.ToString("N0")</p>
+
+                        <a class="btn btn-primary" href="/CustomerBooking?id=@room.IdRuangan&room=@room.NamaJenisRuangan&booking=Karaoke">Lanjutkan Booking</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

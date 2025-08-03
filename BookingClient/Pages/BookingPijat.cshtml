@@ -1,0 +1,165 @@
+﻿@page
+@model BookingClient.Pages.BookingPijatModel
+@{
+    ViewData["Title"] = "Booking Pijat";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css" />
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Booking Pijat - <span class="text-primary">Cabang Karawaci</span></h2>
+
+    <form method="post" class="bg-light p-4 border rounded shadow-sm mx-auto" style="max-width: 500px;">
+        <div class="mb-3">
+            <label class="form-label">Nama</label>
+            <input type="text" class="form-control" value="@HttpContext.Session.GetString("nama")" readonly />
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Tanggal</label>
+            <input id="tanggalPicker" asp-for="Pemesanan.TanggalPemesanan" class="form-control" required />
+            <span asp-validation-for="Pemesanan.TanggalPemesanan" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Jam Mulai</label>
+            <input id="waktuMulai" asp-for="Pemesanan.WaktuMulai" class="form-control" required />
+            <span asp-validation-for="Pemesanan.WaktuMulai" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Jam Selesai</label>
+            <input id="waktuSelesai" asp-for="Pemesanan.WaktuSelesai" class="form-control" required />
+            <span asp-validation-for="Pemesanan.WaktuSelesai" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Terapis</label>
+            <div class="input-group">
+                <input type="text" id="selectedTerapis" class="form-control" placeholder="Pilih Terapis" readonly />
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#terapisModal">
+                    Pilih
+                </button>
+            </div>
+            <input type="hidden" asp-for="Pemesanan.TerapisId" id="Pemesanan_TerapisId" />
+            <span asp-validation-for="Pemesanan.TerapisId" class="text-danger"></span>
+        </div>
+
+            <div class="mb-3">
+                <label class="form-label">Layanan Pijat</label>
+                <input type="text" class="form-control"
+                   value="@(Model.Pemesanan.LayananPijat?.NamaLayanan ?? "")"
+                       readonly />
+                <input type="hidden" asp-for="Pemesanan.LayananPijatId" />
+            </div>
+
+        <input type="hidden" asp-for="Pemesanan.CabangUsahaId" />
+
+        <button type="submit" class="btn btn-warning w-100 fw-bold">Booking Now</button>
+    </form>
+</div>
+
+<!-- Modal Terapis -->
+<div class="modal fade" id="terapisModal" tabindex="-1" aria-labelledby="terapisModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Pilih Terapis</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+            </div>
+            <div class="modal-body">
+                @foreach (var t in Model.TerapisList)
+                {
+                    <div class="card mb-2 d-flex flex-row align-items-center p-2"
+                         onclick="selectTerapis(@t.Id, '@t.NamaTerapis')" style="cursor:pointer">
+                        <img src="@Url.Content("~/images/fototerapis.jpg")"
+                             class="rounded-circle me-3" width="60" height="60" alt="Terapis" />
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">@t.NamaTerapis (@t.JenisKelamin)</h6>
+                            <small class="text-muted">@t.NomorTelepon</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        flatpickr("#tanggalPicker", {
+            dateFormat: "Y-m-d",
+            defaultDate: "@Model.Pemesanan.TanggalPemesanan.ToString("yyyy-MM-dd")"
+        });
+        flatpickr("#waktuMulai", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            defaultDate: "@Model.Pemesanan.WaktuMulai.ToString(@"hh\:mm")"
+        });
+        flatpickr("#waktuSelesai", {
+            enableTime: true,
+            noCalendar: true,
+            dateFormat: "H:i",
+            defaultDate: "@Model.Pemesanan.WaktuSelesai.ToString(@"hh\:mm")"
+        });
+
+        function selectTerapis(id, nama) {
+            document.getElementById("selectedTerapis").value = nama;
+            document.getElementById("Pemesanan_TerapisId").value = id;
+            var modal = bootstrap.Modal.getInstance(document.getElementById('terapisModal'));
+            modal.hide();
+        }
+
+        @if (ViewData["SwalError"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops!',
+                    text: '@ViewData["SwalError"]'
+                });
+            </text>
+        }
+
+        @if (ViewData["SwalSuccess"] != null)
+        {
+            <text>
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: '@ViewData["SwalSuccess"]'
+                });
+            </text>
+        }
+    </script>
+
+    <script>
+                const durasiMenit = @Model.Pemesanan.LayananPijat?.DurasiMenit ?? 60; // default 60 menit kalau null
+            function updateWaktuSelesai() {
+                const waktuMulaiInput = document.getElementById("waktuMulai");
+                const waktuSelesaiInput = document.getElementById("waktuSelesai");
+
+                if (!waktuMulaiInput.value) return;
+
+                const [jam, menit] = waktuMulaiInput.value.split(":").map(Number);
+                if (isNaN(jam) || isNaN(menit)) return;
+
+                let selesaiJam = jam + Math.floor((menit + durasiMenit) / 60);
+                let selesaiMenit = (menit + durasiMenit) % 60;
+
+                if (selesaiJam >= 24) selesaiJam = 23;
+
+                const selesaiStr = `${selesaiJam.toString().padStart(2, "0")}:${selesaiMenit.toString().padStart(2, "0")}`;
+
+                if (waktuSelesaiInput.value !== selesaiStr) {
+                    waktuSelesaiInput.value = selesaiStr;
+                }
+            }
+
+        document.getElementById("waktuMulai").addEventListener("change", updateWaktuSelesai);
+        window.addEventListener("DOMContentLoaded", updateWaktuSelesai);
+    </script>
+}

@@ -1,0 +1,37 @@
+﻿@page
+@model BookingClient.Pages.BookingPijatSuccessModel
+@{
+    ViewData["Title"] = "Booking Berhasil";
+}
+
+<div class="container mt-5">
+    <div class="card shadow rounded-4 border-0">
+        <div class="card-body text-center">
+            <h2 class="text-success mb-4">Silahkan Selesaikan Pembayaran!</h2>
+            <p class="lead">Terima kasih telah melakukan pemesanan pijat.</p>
+            <hr />
+
+            <div class="text-start px-3">
+                <p><strong>Nama Pelanggan:</strong> @Model.BookingDetail.NamaPelanggan</p>
+                <p><strong>Nama Terapis:</strong> @Model.BookingDetail.NamaTerapis</p>
+                <p><strong>Layanan:</strong> @Model.BookingDetail.NamaLayanan</p>
+                <p><strong>Tanggal:</strong> @Model.BookingDetail.TanggalPemesanan.ToString("dd MMMM yyyy")</p>
+                <p><strong>Waktu:</strong> @Model.BookingDetail.WaktuMulai.ToString(@"hh\:mm") - @Model.BookingDetail.WaktuSelesai.ToString(@"hh\:mm")</p>
+                <p><strong>Total Harga:</strong> Rp @Model.BookingDetail.TotalHarga.ToString("N0")</p>
+                <p><strong>Status:</strong> <span class="badge bg-warning text-dark">@Model.BookingDetail.StatusPemesanan</span></p>
+            </div>
+
+            <div class="alert alert-info mt-4 p-4 rounded-3">
+                <h5>Silakan lakukan pembayaran ke Virtual Account berikut:</h5>
+                <div class="display-6 fw-bold text-primary">@Model.VirtualAccount</div>
+                <p class="mt-3 mb-0 text-muted">Nomor VA berlaku 1x transaksi dan aktif selama 1 jam.</p>
+            </div>
+
+            <div class="text-muted mt-2 fst-italic">
+                Status masih <strong>Pending</strong>, silakan lakukan pembayaran minimal <strong>10%</strong> dari total harga.
+            </div>
+
+            <a class="btn btn-primary btn-lg mt-4" href="/Index">Kembali ke Beranda</a>
+        </div>
+    </div>
+</div>

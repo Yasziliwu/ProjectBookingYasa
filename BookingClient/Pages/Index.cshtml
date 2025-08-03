@@ -1,0 +1,57 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<style>
+    .img-circle-button {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #0d6efd; /* Bootstrap Primary */
+    transition: transform 0.3s ease;
+}
+
+.img-circle-button:hover {
+    transform: scale(1.05);
+    border-color: #198754; /* Bootstrap Success */
+}
+
+    .custom-div {
+        background-color: #f9dada;
+        margin-top: 60px;
+        border-radius: 15px;
+    }
+
+</style>
+
+<div class="text-center py-5 custom-div">
+    <h1 class="display-4 fw-bold">NIAS INDO GROUP</h1>
+    <p class="lead">Cari & Pesan Cepat</p>
+
+    <div class="d-flex justify-content-center gap-5 mt-4 flex-wrap">
+        <div class="d-flex justify-content-center gap-5 my-5">
+
+            <!-- Karaoke -->
+            <div class="text-center">
+                <a href="/Karaoke">
+                    <img src="~/images/roomkaraoke.jpeg" alt="Karaoke"
+                         class="img-circle-button" />
+                </a>
+                <p class="mt-2 fw-bold">Room Karaoke</p>
+            </div>
+
+            <!-- Pijat -->
+            <div class="text-center">
+                <a href="/Pijat">
+                    <img src="~/images/pijatterapi.jpg" alt="Pijat"
+                         class="img-circle-button" />
+                </a>
+                <p class="mt-2 fw-bold">Pijat Refleksi</p>
+            </div>
+
+        </div>
+    </div>
+</div>

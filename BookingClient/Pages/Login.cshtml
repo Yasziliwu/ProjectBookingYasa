@@ -1,0 +1,21 @@
+﻿@page
+@model BookingClient.Pages.LoginModel
+@{
+}
+
+
+<div class="container mt-5">
+    <h2>Login</h2>
+    <form method="post">
+        <div class="mb-3">
+            <label asp-for="LoginData.Email" class="form-label"></label>
+            <input asp-for="LoginData.Email" class="form-control" />
+        </div>        
+        <button type="submit" class="btn btn-primary">Login</button>
+    </form>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-info mt-3">@Model.Message</div>
+    }
+</div>

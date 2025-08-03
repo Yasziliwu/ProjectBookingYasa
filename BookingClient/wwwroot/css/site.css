@@ -1,0 +1,58 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+/* Navbar Custom */
+.navbar-custom {
+    background-color: #fddde6;
+    border-radius: 0 0 20px 20px;
+}
+
+.nav-link-custom {
+    margin-left: 20px;
+    font-weight: 500;
+    text-decoration: none;
+    color: #000;
+}
+
+    .nav-link-custom:hover,
+    .nav-link-custom.active {
+        font-weight: 700;
+    }
+
+/* Landing Image Circle */
+.circle-image {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #ffd700;
+}
+
+/* Option Button Style */
+.option-button {
+    background-color: #f7d5cd;
+    color: #000;
+    padding: 10px 30px;
+    font-weight: 500;
+    border: none;
+}
+
+    .option-button:hover {
+        background-color: #f4c1b5;
+    }
